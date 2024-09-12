@@ -1,6 +1,7 @@
 # Import python packages
 import streamlit as st
 import requests
+import pandas as pd
 from snowflake.snowpark.functions import col
 
 # Write directly to the app
@@ -15,8 +16,17 @@ cnx = st.connection("snowflake")
 session = cnx.session()
 # create a dataframe with fruit names
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit_name'), col('search_on'))
-st.dataframe(data=my_dataframe, use_container_width=True)
+# st.dataframe(data=my_dataframe, use_container_width=True)
+# st.stop()
+
+# Convert the Snowpark Dataframe to a Pandas df, so we can use the LOC function
+pd_df = my_dataframe.to_pandas()
+st.dataframe(pd_df)
 st.stop()
+
+# get the search_on value
+search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
+st.write('The search value for ', fruit_chosen,' is ', search_on, '.')
 
 # Create a dropdown with fruit names allowing max 5 selections
 ingredients_list = st.multiselect(
