@@ -10,7 +10,7 @@ st.write("Choose the fruits you want in your custom Smoothie!")
 name_on_order = st.text_input('Name on Smoothie:')
 st.write("The name on your Smoothie will be:", name_on_order)
 
-cnx = st.connections("snowflake")
+cnx = st.connection("snowflake")
 session = cnx.session()
 # create a dataframe with fruit names
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit_name'))
